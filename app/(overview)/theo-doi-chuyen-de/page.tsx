@@ -10,6 +10,7 @@ import { Header } from '@/components/header'
 import { motion } from 'motion/react'
 import { Sync } from '@/app/actions'
 import { db } from '@/libs/instantdb'
+import { initial, animate, transition } from '@/libs/motion'
 
 const SYNC_COOLDOWN = Number(process.env.NEXT_PUBLIC_SYNC_COOLDOWN || 30000) // 20 seconds
 
@@ -81,18 +82,10 @@ export default function Page() {
     <>
       <Header title="Theo dõi chuyên đề" extraButtons={SyncButton} />
       <main className="flex flex-col gap-4 p-4 pt-0">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div initial={initial} animate={animate} transition={transition}>
           <ActiveTopicTable data={data ?? {}} isLoading={isLoading} />
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div initial={initial} animate={animate} transition={transition}>
           <CompletedTopicTable data={data ?? {}} isLoading={isLoading} />
         </motion.div>
       </main>

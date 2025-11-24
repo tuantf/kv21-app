@@ -10,6 +10,7 @@ import { CompletedCoordinatorTable } from './_components/completed-coordinator-t
 import { toast } from 'sonner'
 import { Sync } from '@/app/actions'
 import { db } from '@/libs/instantdb'
+import { initial, animate, transition } from '@/libs/motion'
 
 const SYNC_COOLDOWN_MS = Number(process.env.NEXT_PUBLIC_SYNC_COOLDOWN_MS || 30000) // 30 seconds
 
@@ -80,18 +81,10 @@ export default function Page() {
     <>
       <Header title="Công tác tổng hợp" extraButtons={SyncButton} />
       <main className="flex flex-col gap-4 p-4 pt-0">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div initial={initial} animate={animate} transition={transition}>
           <ActiveCoordinatorTable data={data ?? {}} isLoading={isLoading} />
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div initial={initial} animate={animate} transition={transition}>
           <CompletedCoordinatorTable data={data ?? {}} isLoading={isLoading} />
         </motion.div>
       </main>

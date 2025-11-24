@@ -9,6 +9,7 @@ import { useState, useRef } from 'react'
 import { motion } from 'motion/react'
 import { Sync } from '@/app/actions'
 import { db } from '@/libs/instantdb'
+import { initial, animate, transition } from '@/libs/motion'
 
 const SYNC_COOLDOWN = Number(process.env.NEXT_PUBLIC_SYNC_COOLDOWN || 30000)
 
@@ -81,9 +82,9 @@ export default function Page() {
       <Header title="Trang chủ" extraButtons={SyncButton} />
       <main className="flex flex-1 flex-col gap-4 overflow-auto p-4 pt-0 md:overflow-hidden">
         <motion.section
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          initial={initial}
+          animate={animate}
+          transition={transition}
           className="min-h-0 flex-none md:flex-1 md:basis-2/5"
         >
           <div className="flex h-full flex-1 flex-col gap-4 md:flex-row">
@@ -108,9 +109,9 @@ export default function Page() {
           </div>
         </motion.section>
         <motion.section
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          initial={initial}
+          animate={animate}
+          transition={transition}
           className="flex-none md:min-h-0 md:flex-1 md:basis-3/5"
         >
           <TodayWork
