@@ -1,0 +1,14 @@
+# Standard
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+pb_migrations/**
+pb_hooks/**
+pb_data/**
+
+# lockfiles
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+bun.lock
