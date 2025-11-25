@@ -1,53 +1,44 @@
-<h1 align="center" style={width: 20, height: 20}>
-    <a href="https://kv21.io.vn">
-    <img src="./public/21.webp">
-    </a>
+<h1 align="center">
+  <p style="color: #ff5000">21</p>
+  <p>KV21</p>
 </h1>
 
-A comprehensive web application for managing fire safety and rescue operations (PCCC & CNCH) for ĐKV21. This system provides real-time tracking, reporting, and analytics for fire incidents, rescue operations, work assignments, and performance metrics.
+<p align="center">
+  <i align="center">Phần mềm cung cấp số liệu thời gian thực, phục vụ công tác thống kê, báo cáo, theo dõi công việc và theo dõi chỉ tiêu công tác 🚀</i>
+</p>
 
-## Features
+## Tổng quan
 
-### Core Functionality
+### Chức năng chính
 
-- **Dashboard** - Real-time charts and work tracking overview
-- **Work Tracking** (Theo dõi công việc) - Monitor daily and weekly work assignments
-- **Target Tracking** (Theo dõi chỉ tiêu) - Track performance indicators and metrics
-- **Topic Tracking** (Theo dõi chuyên đề) - Manage and track specialized topics/projects
-- **Daily Reports** (Báo cáo ngày) - Generate and view daily activity reports
-- **Summary Work** (Công tác tổng hợp) - Comprehensive work summaries and aggregations
+- **Bảng dữ liệu** - Biều đồ và bảng thời gian thực để có cái nhìn tổng quan về số liệu vụ cháy, nổ, CNCH và theo dõi công việc trong ngày
+- **Theo dõi công việc** - Theo dõi công việc trong ngày, công việc trong tuần và công việc tuần tới
+- **Theo dõi chỉ tiêu** - Biểu đồ thời gian thực theo dõi toàn bộ chỉ tiêu công tác
+- **Theo dõi chuyên đề** - Thống kê các chuyên đề đang thực hiện, đã kết thúc và tiến độ thực hiện từng chuyên đề
+- **Báo cáo ngày** - Sử dụng Google Form để gửi báo cáo kết quả công tác trong ngày
+- **Công tác tổng hợp** - Thống kê các phần việc tổng hợp
 
-### Additional Features
+### Chức năng khác
 
-- **Fire Safety Experience** (Trải nghiệm PCCC) - Interactive fire safety resources
+- **Trải nghiệm PCCC** - Trang giới thiệu tổng quan về chương trình tuyên truyền, trải nghiệm, thực hành chữa cháy và CNCH do đơn vi tổ chức
 - **AI Features**:
-  - Q&A for Fire Safety & Rescue (Hỏi đáp PCCC&CNCH)
-  - AI Work Assistant (AI phục vụ công việc)
-  - Advanced AI Tools (AI nâng cao)
+  - Hỏi đáp PCCC&CNCH dử dụng NotebookLM
+  - AI phục vụ công việc
+  - AI nâng cao phục vụ tự động hoá công tác thống kê, báo cáo
 
-### Technical Features
+## Dành cho nhà phát triển
 
-- **Google Sheets Integration** - Automatic synchronization from Google Sheets
-- **Real-time Updates** - Live data updates via InstantDB
-- **Analytics** - Built-in Umami analytics integration
-- **Responsive Design** - Modern UI built with Radix UI and Tailwind CSS
+### Tech Stack
 
-## Tech Stack
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Database**: [InstantDB](https://instantdb.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: [Shadcn UI](https://www.radix-ui.com/)
+- **Animations**: [Motion](https://motion.dev/)
+- **Charts**: [Recharts](https://recharts.org/)
+- **Analytics**: [Umami](https://umami.is/)
 
-- **Framework**: [Next.js](https://nextjs.org/) 16.0.3 (App Router)
-- **Runtime**: [React](https://react.dev/) 19.2.0
-- **Language**: [TypeScript](https://www.typescriptlang.org/) 5.9.3
-- **Database**: [InstantDB](https://instantdb.com/) - Real-time database
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) 4.1.17
-- **UI Components**: [Radix UI](https://www.radix-ui.com/) - Accessible component primitives
-- **Animations**: [Motion](https://motion.dev/) 12.23.24
-- **Forms**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) validation
-- **Charts**: [Recharts](https://recharts.org/) 2.15.4
-- **Analytics**: [Umami](https://umami.is/) - Privacy-focused analytics
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed:
+### Before you begin, ensure you have the following installed:
 
 - **Node.js** 18.x or higher (or compatible runtime)
 - **Bun** (recommended) or npm/yarn for package management
@@ -55,7 +46,7 @@ Before you begin, ensure you have the following installed:
 - **InstantDB** account and application setup
 - Environment variables configured (see below)
 
-## Installation
+### Installation
 
 1. **Clone the repository**
 
@@ -95,7 +86,7 @@ Before you begin, ensure you have the following installed:
 
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Environment Variables
+### Environment Variables
 
 | Variable                       | Required | Description                                           |
 | ------------------------------ | -------- | ----------------------------------------------------- |
@@ -111,7 +102,7 @@ Before you begin, ensure you have the following installed:
 The `SHEET_ID` is the long identifier in your Google Sheets URL:
 
 ```
-https://docs.google.com/spreadsheets/d/SHEET_ID_HERE/edit
+https://docs.google.com/spreadsheets/d/{SHEET_ID_HERE}/edit
 ```
 
 ### Getting InstantDB Credentials
@@ -128,9 +119,9 @@ Generate a secure random token for API authentication:
 openssl rand -hex 32
 ```
 
-## Usage
+### Usage
 
-### Development
+#### Development
 
 Start the development server:
 
@@ -140,7 +131,7 @@ bun dev
 npm run dev
 ```
 
-### Building for Production
+#### Building for Production
 
 Build the application:
 
@@ -150,7 +141,7 @@ bun build
 npm run build
 ```
 
-### Running in Production
+#### Running in Production
 
 Start the production server:
 
@@ -160,9 +151,9 @@ bun start
 npm start
 ```
 
-## Sync
+### Sync
 
-### Setting Up Automated Sync
+#### Setting Up Automated Sync
 
 Set up automated synchronization using a cron service like [cron-job.org](https://cron-job.org/):
 
@@ -172,4 +163,6 @@ Set up automated synchronization using a cron service like [cron-job.org](https:
    - `Authorization: Bearer YOUR_SYNC_TOKEN`
 4. **Schedule**: As needed (e.g., every 15 minutes)
 
-#**Note**: This application is designed specifically for ĐKV21.
+# Ghi chú
+
+Phần mềm này được thiết kế dành riêng cho ĐKV21.
