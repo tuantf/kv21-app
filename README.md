@@ -1,4 +1,4 @@
-<h1 align="center">
+<h1 align="center" style={width: 20, height: 20}>
     <a href="https://kv21.io.vn">
     <img src="./public/21.webp">
     </a>
