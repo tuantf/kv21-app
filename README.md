@@ -21,7 +21,7 @@
 ### Chức năng khác
 
 - **Trải nghiệm PCCC** - Trang giới thiệu tổng quan về chương trình tuyên truyền, trải nghiệm, thực hành chữa cháy và CNCH do đơn vi tổ chức
-- **AI Features**:
+- **Chức năng AI**:
   - Hỏi đáp PCCC&CNCH dử dụng NotebookLM
   - AI phục vụ công việc
   - AI nâng cao phục vụ tự động hoá công tác thống kê, báo cáo
@@ -162,7 +162,3 @@ Set up automated synchronization using a cron service like [cron-job.org](https:
 3. **Request Headers**:
    - `Authorization: Bearer YOUR_SYNC_TOKEN`
 4. **Schedule**: As needed (e.g., every 15 minutes)
-
-# Ghi chú
-
-Phần mềm này được thiết kế dành riêng cho ĐKV21.
