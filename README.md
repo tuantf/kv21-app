@@ -1,10 +1,10 @@
-# KV21 - Data overviews and Works tracker system
+<h1 align="center">
+    <a href="https://kv21.io.vn">
+    <img src="./public/21.webp">
+    </a>
+</h1>
 
-![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
-![Next.js](https://img.shields.io/badge/Next.js-16.0.3-black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue)
-
-A comprehensive web application for managing fire safety and rescue operations (PCCC & CNCH) for ĐKV 21. This system provides real-time tracking, reporting, and analytics for fire incidents, rescue operations, work assignments, and performance metrics.
+A comprehensive web application for managing fire safety and rescue operations (PCCC & CNCH) for ĐKV21. This system provides real-time tracking, reporting, and analytics for fire incidents, rescue operations, work assignments, and performance metrics.
 
 ## Features
 
@@ -172,6 +172,4 @@ Set up automated synchronization using a cron service like [cron-job.org](https:
    - `Authorization: Bearer YOUR_SYNC_TOKEN`
 4. **Schedule**: As needed (e.g., every 15 minutes)
 
----
-
-**Note**: This application is designed specifically for ĐKV 21.
+#**Note**: This application is designed specifically for ĐKV21.
