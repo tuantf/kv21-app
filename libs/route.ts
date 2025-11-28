@@ -15,7 +15,7 @@ import {
 const route = {
   user: {
     name: 'Xin chào',
-    email: 'pccckv21hn@gmail.com',
+    email: 'xinchao@kv21.io.vn',
     avatar: '/21.webp',
   },
   overview: [
