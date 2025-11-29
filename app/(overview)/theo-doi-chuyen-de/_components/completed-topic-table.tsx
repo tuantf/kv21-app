@@ -1,9 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { db } from '@/libs/instantdb'
 import { id } from '@instantdb/react'
-import { DataTable, ExtendedColumnDef } from '@/components/ui/data-table'
+import {
+  SortableDataTable,
+  ExtendedColumnDef,
+  createDragHandleColumn,
+} from '@/components/ui/sortable-data-table'
 import { Trash2, Plus, Ellipsis, Pencil, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -49,6 +53,7 @@ type ChuyendeRow = {
   supervisor?: string
   link?: string
   updated?: string
+  order?: number
 }
 
 export const CompletedTopicTable = ({
@@ -198,6 +203,10 @@ export const CompletedTopicTable = ({
       const sanitizedReport = sanitizeInput(formData.report)
       const sanitizedSupervisor = sanitizeInput(formData.supervisor)
 
+      // Get max order from existing data
+      const chuyendeketthucData = (data.chuyendeketthuc || []) as ChuyendeRow[]
+      const maxOrder = chuyendeketthucData.reduce((max, item) => Math.max(max, item.order ?? 0), -1)
+
       await db.transact(
         db.tx.chuyendeketthuc[id()].update({
           created: now,
@@ -207,6 +216,7 @@ export const CompletedTopicTable = ({
           report: sanitizedReport,
           supervisor: sanitizedSupervisor,
           updated: now,
+          order: maxOrder + 1,
         }),
       )
 
@@ -297,6 +307,10 @@ export const CompletedTopicTable = ({
     try {
       const now = new Date().toISOString()
 
+      // Get max order from chuyende
+      const chuyendeData = (data.chuyende || []) as ChuyendeRow[]
+      const maxOrder = chuyendeData.reduce((max, item) => Math.max(max, item.order ?? 0), -1)
+
       // Create new record in chuyende with same data
       await db.transact(
         db.tx.chuyende[id()].update({
@@ -308,6 +322,7 @@ export const CompletedTopicTable = ({
           supervisor: row.supervisor || '',
           progress: row.progress || '',
           updated: now,
+          order: maxOrder + 1,
         }),
       )
 
@@ -318,7 +333,29 @@ export const CompletedTopicTable = ({
     }
   }
 
-  const createColumns = (): ExtendedColumnDef<ChuyendeRow, string>[] => [
+  const handleReorder = async (reorderedItems: ChuyendeRow[]) => {
+    try {
+      const updates = reorderedItems.map((item, index) =>
+        db.tx.chuyendeketthuc[item.id].update({ order: index }),
+      )
+      await db.transact(updates)
+    } catch (error) {
+      console.error('Error reordering:', error)
+    }
+  }
+
+  // Sort data by order field
+  const sortedData = useMemo(() => {
+    const chuyendeketthucData = (data.chuyendeketthuc || []) as ChuyendeRow[]
+    return [...chuyendeketthucData].sort((a, b) => {
+      const orderA = a.order ?? Number.MAX_SAFE_INTEGER
+      const orderB = b.order ?? Number.MAX_SAFE_INTEGER
+      return orderA - orderB
+    })
+  }, [data.chuyendeketthuc])
+
+  const createColumns = (): ExtendedColumnDef<ChuyendeRow, unknown>[] => [
+    createDragHandleColumn<ChuyendeRow>(),
     {
       accessorKey: 'name',
       header: 'Tên chuyên đề',
@@ -388,7 +425,7 @@ export const CompletedTopicTable = ({
           return null
         }
         return (
-          <div className="flex items-center justify-center">
+          <div className="m-0 flex items-center justify-center p-0">
             <a
               href={link}
               target="_blank"
@@ -670,7 +707,7 @@ export const CompletedTopicTable = ({
           <Skeleton className="h-30 w-full" />
         ) : (
           <div className="h-full w-full overflow-y-auto rounded-lg border">
-            <DataTable columns={columns} data={data.chuyendeketthuc || []} />
+            <SortableDataTable columns={columns} data={sortedData} onReorder={handleReorder} />
           </div>
         )}
       </CardContent>
@@ -682,9 +719,7 @@ export const CompletedTopicTable = ({
               Bạn có chắc chắn muốn xóa chuyên đề này không? Hành động này không thể hoàn tác.
               {deletingRowId && (
                 <span className="mt-2 block font-medium">
-                  {(data.chuyendeketthuc || [])
-                    .find(row => row.id === deletingRowId)
-                    ?.name?.toUpperCase()}
+                  {sortedData.find(row => row.id === deletingRowId)?.name?.toUpperCase()}
                 </span>
               )}
             </AlertDialogDescription>
