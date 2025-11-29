@@ -79,7 +79,7 @@ export default function SimpleMarqueeDemo() {
               'md:text-md ht absolute top-0 z-10 mt-8 flex items-center justify-center text-center',
             )}
           >
-            <img src="/pccc.avif" alt="logo" className="mr-3 h-10" />
+            <img src="/other/pccc.avif" alt="logo" className="mr-3 h-10" />
             <div>
               <p className="text-xs md:text-sm">PHÒNG CẢNH SÁT PCCC&CNCH</p>
               <p className="text-md leading-tight font-bold tracking-tight md:text-lg">
@@ -99,7 +99,7 @@ export default function SimpleMarqueeDemo() {
             'md:text-md ht absolute top-0 z-10 mt-8 flex items-center justify-center text-center text-sm',
           )}
         >
-          <img src="/pccc.avif" alt="logo" className="mr-3 h-10" />
+          <img src="/other/pccc.avif" alt="logo" className="mr-3 h-10" />
           <div>
             <p className="text-xs md:text-sm">PHÒNG CẢNH SÁT PCCC&CNCH</p>
             <p className="text-md leading-tight font-bold tracking-tight md:text-lg">

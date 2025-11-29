@@ -8,7 +8,7 @@ export default function NotFound() {
     <div className="h-svh w-full">
       <div className="flex h-full flex-1 items-center justify-center gap-4">
         <div className="relative h-24 w-24 overflow-hidden rounded-lg">
-          <Image src="/calm.avif" alt="CalmFire" fill loading="eager" />
+          <Image src="/other/station.avif" alt="404" fill loading="eager" />
         </div>
         <div className="flex flex-col items-start justify-center gap-2">
           <span className="text-3xl leading-none font-bold tracking-wider">404</span>

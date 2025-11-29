@@ -352,7 +352,7 @@ export const CompletedCoordinatorTable = ({
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center"
             >
-              <img src="/sheets.svg" alt="Google Sheets" className="size-4" />
+              <img src="/logo/sheets.svg" alt="Google Sheets" className="size-4" />
             </a>
           </div>
         )

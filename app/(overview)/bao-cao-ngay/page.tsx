@@ -103,7 +103,13 @@ export default function Page() {
           <iframe className="h-full w-full border-none" src={iframeUrl} />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8">
-            <Image src="/forms.svg" alt="Google Form" className="size-12" width={48} height={48} />
+            <Image
+              src="/logo/forms.svg"
+              alt="Google Form"
+              className="size-12"
+              width={48}
+              height={48}
+            />
             <div className="text-center">
               <h3 className="text-lg font-semibold">Chưa có Google Form</h3>
               <p className="text-muted-foreground mt-2 text-sm">

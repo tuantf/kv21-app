@@ -6,7 +6,7 @@ import { NavHeader } from './nav-header'
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar'
-import { route } from '@/libs/route'
+import { routes } from '@/routes'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -15,12 +15,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavHeader />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={route.overview} label="Tổng quan" />
-        <NavMain items={route.other} label="Công việc khác" />
-        <NavMain items={route.ai} label="AI" />
+        <NavMain items={routes.overview} label="Tổng quan" />
+        <NavMain items={routes.other} label="Công việc khác" />
+        <NavMain items={routes.ai} label="AI" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={route.user} />
+        <NavUser user={routes.user} />
       </SidebarFooter>
     </Sidebar>
   )

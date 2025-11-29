@@ -24,7 +24,7 @@ export default function Page() {
             <div className="flex flex-1 flex-col gap-4 p-4">
               <div className="flex items-center gap-4">
                 <Image
-                  src="/notebooklm.svg"
+                  src="/logo/notebooklm.svg"
                   alt="logo"
                   width={40}
                   height={40}
@@ -109,7 +109,7 @@ export default function Page() {
             <div className="flex flex-1 flex-col gap-4 p-4">
               <div className="flex items-center gap-4">
                 <Image
-                  src="/notebooklm.svg"
+                  src="/logo/notebooklm.svg"
                   alt="logo"
                   width={40}
                   height={40}

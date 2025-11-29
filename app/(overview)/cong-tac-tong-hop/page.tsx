@@ -11,7 +11,6 @@ import { toast } from 'sonner'
 import { Sync } from '@/app/actions'
 import { db } from '@/libs/instantdb'
 import { initial, animate, transition } from '@/libs/motion'
-import { ForceLogin } from '@/components/login/force-login'
 
 const SYNC_COOLDOWN_MS = Number(process.env.NEXT_PUBLIC_SYNC_COOLDOWN_MS || 30000) // 30 seconds
 
