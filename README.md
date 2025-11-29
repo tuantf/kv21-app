@@ -63,7 +63,8 @@ NEXT_PUBLIC_SYNC_COOLDOWN_MS=30000  # Optional, default: 30000ms
 **5. Set up automated sync**
 
 ```
-Set up automated synchronization data from Google Sheets into InstantDB using a cron service like [cron-job.org](https://cron-job.org/):
+Set up automatic data synchronization from Google Sheets to InstantDB
+using a cron service such as [cron-job.org](https://cron-job.org/):
 1. URL: `https://your-domain.com/api/sync`
 2. Method: `GET`
 3. Request Headers:
