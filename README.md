@@ -37,13 +37,13 @@
 - **Charts**: [Recharts](https://recharts.org/)
 - **Analytics**: [Umami](https://umami.is/)
 
-### If you want to make a similar software to your unit
+### If you want to build similar software for your unit
 
-1. **Clone the repository**
+**1. Clone the repository**
 
-2. **Install dependencies**
+**2. Install dependencies**
 
-3. **Set up environment variables**
+**3. Set up environment variables**
 
 ```env
 SHEET_ID=your_google_sheets_id
@@ -54,20 +54,19 @@ NEXT_PUBLIC_UMAMI_ID=your_umami_id  # Optional
 NEXT_PUBLIC_SYNC_COOLDOWN_MS=30000  # Optional, default: 30000ms
 ```
 
-4. **Getting InstantDB Credentials**
+**4. Getting InstantDB Credentials**
 
 1. Sign up at [InstantDB](https://instantdb.com/)
 1. Create a new application
 1. Copy your App ID and Admin Token from the dashboard
 
-1. **Set up automated sync**
-
-Set up automated synchronization data from Google Sheets into InstantDB using a cron service like [cron-job.org](https://cron-job.org/):
+**5. Set up automated sync**
 
 ```
-1. **URL**: `https://your-domain.com/api/sync`
-2. **Method**: `GET`
-3. **Request Headers**:
+Set up automated synchronization data from Google Sheets into InstantDB using a cron service like [cron-job.org](https://cron-job.org/):
+1. URL: `https://your-domain.com/api/sync`
+2. Method: `GET`
+3. Request Headers:
   - `Authorization: Bearer YOUR_SYNC_TOKEN`
-4. **Schedule**: As needed (e.g., every 15 minutes)
+4. Schedule: As needed (e.g., every 15 minutes)
 ```
