@@ -1,7 +1,6 @@
 'use client'
 
-import { ChevronsUpDown, Info, LogOut, UserPen } from 'lucide-react'
-
+import { ChevronsUpDown, Info, LogIn, LogOut, UserPen } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -18,6 +17,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { db } from '@/libs/instantdb'
+import { useRouter } from 'next/navigation'
 
 export function NavUser({
   user,
@@ -29,7 +30,7 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-
+  const router = useRouter()
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -61,7 +62,7 @@ export function NavUser({
                 <Avatar className="h-8 w-8 rounded-full">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-full border border-gray-200">
-                    CN
+                    21
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -70,23 +71,37 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="hover:bg-ring/20">
-                <UserPen />
-                Tài khoản
-              </DropdownMenuItem>
+            <db.SignedOut>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  className="hover:bg-ring/20"
+                  onClick={() => router.push('/dang-nhap')}
+                >
+                  <LogIn />
+                  Đăng nhập
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </db.SignedOut>
+            <db.SignedIn>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="hover:bg-ring/20">
+                  <UserPen />
+                  Tài khoản
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="hover:bg-ring/20">
+                  <Info />
+                  Giới thiệu
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="hover:bg-ring/20">
-                <Info />
-                Giới thiệu
+                <LogOut />
+                Đăng xuất
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="hover:bg-ring/20">
-              <LogOut />
-              Đăng xuất
-            </DropdownMenuItem>
+            </db.SignedIn>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

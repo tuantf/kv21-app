@@ -10,7 +10,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
   return (
     <div
       className={cn(
-        'md:bg-background/80 -mt-8 flex flex-col gap-6 rounded-lg p-6 md:border',
+        'md:bg-sidebar/50 -mt-8 flex flex-col gap-6 rounded-lg p-6 md:border md:backdrop-blur-lg',
         className,
       )}
       {...props}
@@ -35,7 +35,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
           <FieldSeparator className="text-muted-foreground font-medium">Hoặc</FieldSeparator>
           <Field>
             <Button variant="outline" type="button" className="w-full gap-3">
-              <img src="/google.svg" alt="Google" width={16} height={16} />
+              <img src="/logo/google.svg" alt="Google" width={16} height={16} />
               <div className="text-muted-foreground">Đăng nhập với Google</div>
             </Button>
           </Field>
