@@ -1,24 +1,36 @@
 /**
+ * Removes HTML tags from a string using regex
+ * Safe for use in Cloudflare Workers and all JavaScript environments
+ */
+function stripHtmlTags(input: string): string {
+  // Remove HTML tags while preserving the text content
+  // This regex handles both simple tags and self-closing tags
+  return input.replace(/<[^>]*>/g, '')
+}
+
+/**
  * Sanitizes user input by removing dangerous characters and trimming whitespace
- * Uses isomorphic-dompurify for robust XSS protection on both client and server
+ * Uses regex-based tag stripping for compatibility with Cloudflare Workers
  * @param input - The string to sanitize
  * @returns Sanitized string
  */
-import DOMPurify from 'isomorphic-dompurify'
-
 export function sanitizeInput(input: string): string {
   if (!input || typeof input !== 'string') {
     return ''
   }
 
-  // Trim whitespace
   const trimmed = input.trim()
 
-  // Use DOMPurify to sanitize HTML
-  // ALLOWED_TAGS: [] means strip ALL HTML tags, leaving only text.
-  // This mimics the previous behavior of removing script/iframe/etc but is safer.
-  // If you want to allow some basic HTML (like bold/italic), you can remove the config object.
-  return DOMPurify.sanitize(trimmed, { ALLOWED_TAGS: [] })
+  // Strip HTML tags
+  const withoutTags = stripHtmlTags(trimmed)
+
+  // Decode common HTML entities
+  return withoutTags
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
 }
 
 /**
@@ -33,10 +45,8 @@ export function sanitizeUrl(url: string): string {
 
   const trimmed = url.trim()
 
-  // For URLs, we also want to strip HTML tags.
-  // DOMPurify will keep the text content (the URL itself).
-  // It also handles encoding.
-  return DOMPurify.sanitize(trimmed, { ALLOWED_TAGS: [] })
+  // Strip HTML tags
+  return stripHtmlTags(trimmed)
 }
 
 /**
@@ -50,8 +60,7 @@ export function extractUrlFromIframe(input: string): string {
     return ''
   }
 
-  // We still use regex for extraction as it's efficient for this specific pattern
-  // but we sanitize the output to be safe.
+  // Extract URL from iframe src attribute
   const iframeMatch = input.match(/<iframe[^>]*src\s*=\s*["']([^"']+)["'][^>]*>/i)
   if (iframeMatch && iframeMatch[1]) {
     return sanitizeUrl(iframeMatch[1])
