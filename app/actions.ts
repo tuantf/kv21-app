@@ -75,3 +75,46 @@ export async function updateBaoCaoNgaySettings(iframeUrl: string) {
     return { success: false, message: error.message || 'Có lỗi xảy ra khi thêm URL' }
   }
 }
+
+export async function updateHoiDapLinks(tcqcUrl: string, quytrinhUrl: string) {
+  try {
+    if (!tcqcUrl || !quytrinhUrl) {
+      return { success: false, message: 'URL không được để trống' }
+    }
+
+    const now = new Date().toISOString()
+
+    // Helper to update or create a link record
+    const updateLink = async (name: string, url: string) => {
+      const query = { hoidap: { $: { where: { name } } } }
+      const existing = await db.query(query)
+      const records = existing?.hoidap || []
+
+      if (records.length > 0) {
+        const recordId = records[0].id
+        await db.transact(
+          db.tx.hoidap[recordId].update({
+            link: url.trim(),
+            updated: now,
+          }),
+        )
+      } else {
+        const id = crypto.randomUUID()
+        await db.transact(
+          db.tx.hoidap[id].update({
+            name,
+            link: url.trim(),
+            updated: now,
+          }),
+        )
+      }
+    }
+
+    await Promise.all([updateLink('tcqc', tcqcUrl), updateLink('quytrinh', quytrinhUrl)])
+
+    return { success: true, message: 'Cập nhật thành công' }
+  } catch (error: any) {
+    console.error('Error updating:', error)
+    return { success: false, message: error.message || 'Có lỗi xảy ra khi cập nhật' }
+  }
+}
