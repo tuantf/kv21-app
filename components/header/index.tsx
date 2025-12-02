@@ -11,9 +11,10 @@ import { db } from '@/libs/instantdb'
 interface HeaderProps {
   title: string
   extraButtons?: ReactNode
+  isAdmin?: boolean
 }
 
-const Header = ({ title, extraButtons }: HeaderProps) => {
+const Header = ({ title, extraButtons, isAdmin = false }: HeaderProps) => {
   const { isMobile, openMobile, open } = useSidebar()
 
   return (
@@ -21,17 +22,27 @@ const Header = ({ title, extraButtons }: HeaderProps) => {
       <div className="flex items-center gap-2 px-4">
         <SidebarTrigger className="hover:bg-ring/20 -ml-1" />
         <Separator orientation="vertical" className="bg-ring/80 data-[orientation=vertical]:h-4" />
-        <db.SignedIn>
-          {extraButtons && (
-            <>
-              {extraButtons}
-              <Separator
-                orientation="vertical"
-                className="bg-ring/80 data-[orientation=vertical]:h-4"
-              />
-            </>
-          )}
-        </db.SignedIn>
+        {!isAdmin ? (
+          <db.SignedIn>
+            {extraButtons && (
+              <>
+                {extraButtons}
+                <Separator
+                  orientation="vertical"
+                  className="bg-ring/80 data-[orientation=vertical]:h-4"
+                />
+              </>
+            )}
+          </db.SignedIn>
+        ) : (
+          <>
+            {extraButtons}
+            <Separator
+              orientation="vertical"
+              className="bg-ring/80 data-[orientation=vertical]:h-4"
+            />
+          </>
+        )}
         <Breadcrumb className="ml-1">
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
