@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/sidebar'
 import { db } from '@/libs/instantdb'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 export function NavUser({
   user,
@@ -97,7 +98,13 @@ export function NavUser({
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:bg-ring/20">
+              <DropdownMenuItem
+                className="hover:bg-ring/20"
+                onClick={() => {
+                  db.auth.signOut()
+                  toast.info('Đã đăng xuất')
+                }}
+              >
                 <LogOut />
                 Đăng xuất
               </DropdownMenuItem>

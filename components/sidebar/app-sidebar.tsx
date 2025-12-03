@@ -7,6 +7,8 @@ import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar'
 import { routes } from '@/routes'
+import { NavSecondary } from './nav-secondary'
+import { db } from '@/libs/instantdb'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -16,10 +18,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={routes.overview} label="Tổng quan" />
-        <NavMain items={routes.other} label="Công việc khác" />
         <NavMain items={routes.ai} label="AI" />
       </SidebarContent>
       <SidebarFooter>
+        <db.SignedIn>
+          <NavSecondary items={routes.helper} />
+        </db.SignedIn>
         <NavUser user={routes.user} />
       </SidebarFooter>
     </Sidebar>

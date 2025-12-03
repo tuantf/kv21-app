@@ -36,7 +36,7 @@ export function NavSecondary({
                   <div className="text-foreground/80 flex size-3 items-center justify-center">
                     {item.icon && <item.icon />}
                   </div>
-                  <span>{item.title}</span>
+                  <span className="-translate-y-0.25">{item.title}</span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
