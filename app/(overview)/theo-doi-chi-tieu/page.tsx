@@ -125,48 +125,55 @@ export default function Page() {
   // Convert groupedData to array for rendering
   const groupsArray = useMemo(() => Object.values(groupedData), [groupedData])
 
-  // Chart layout configuration: [sectionIndex, basisClass]
-  const chartLayout = [
-    { section: 0, basis: 'md:basis-1/3' }, // First section: 3 charts
-    { section: 0, basis: 'md:basis-1/3' },
-    { section: 0, basis: 'md:basis-1/3' },
-    { section: 1, basis: 'md:basis-1/3' }, // Second section: 2 charts
-    { section: 1, basis: 'md:basis-2/3' },
-  ]
+  // Order: [0] kiểm tra [1] tuyên truyền [2] huấn luyện [3] phương án [4] khác
 
   return (
     <>
       <Header title="Theo dõi chi tiêu" extraButtons={SyncButton} />
       <main className="flex flex-1 flex-col gap-4 overflow-auto p-4 pt-0 md:overflow-hidden">
-        {[0, 1].map(sectionIndex => {
-          const sectionCharts = chartLayout
-            .map((layout, index) => ({ ...layout, groupIndex: index }))
-            .filter(layout => layout.section === sectionIndex)
-          return (
-            <motion.section
-              key={sectionIndex}
-              initial={initial}
-              animate={animate}
-              transition={transition}
-              className="min-h-0 flex-none md:flex-1 md:basis-1/2"
-            >
-              <div className="flex h-full flex-1 flex-col gap-4 md:flex-row">
-                {sectionCharts.map(({ basis, groupIndex }) => {
-                  const group = groupsArray[groupIndex]
-                  return (
-                    <div key={groupIndex} className={`min-h-[300px] flex-1 md:min-h-min ${basis}`}>
-                      <TargetChart
-                        label={group?.groupLabel}
-                        data={group?.categories || []}
-                        isLoading={isLoading}
-                      />
-                    </div>
-                  )
-                })}
-              </div>
-            </motion.section>
-          )
-        })}
+        <motion.section
+          initial={initial}
+          animate={animate}
+          transition={transition}
+          className="min-h-0 flex-none md:flex-1 md:basis-1/2"
+        >
+          <div className="flex h-full flex-1 flex-col gap-4 md:flex-row">
+            <TargetChart
+              label="kiểm tra"
+              data={groupsArray[0]?.categories || []}
+              isLoading={isLoading}
+            />
+            <TargetChart
+              label="tuyên truyền"
+              data={groupsArray[1]?.categories || []}
+              isLoading={isLoading}
+            />
+            <TargetChart
+              label="huấn luyện"
+              data={groupsArray[2]?.categories || []}
+              isLoading={isLoading}
+            />
+          </div>
+        </motion.section>
+        <motion.section
+          initial={initial}
+          animate={animate}
+          transition={transition}
+          className="min-h-0 flex-none md:flex-1 md:basis-1/2"
+        >
+          <div className="flex h-full flex-1 flex-col gap-4 md:flex-row">
+            <TargetChart
+              label="phương án"
+              data={groupsArray[3]?.categories || []}
+              isLoading={isLoading}
+            />
+            <TargetChart
+              label="khác"
+              data={groupsArray[4]?.categories || []}
+              isLoading={isLoading}
+            />
+          </div>
+        </motion.section>
       </main>
     </>
   )

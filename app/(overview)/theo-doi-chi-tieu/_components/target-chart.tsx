@@ -13,10 +13,14 @@ const TargetChart = ({
   label,
   data,
   isLoading,
+  labelAngle,
+  textAnchor,
 }: {
   label: string
   data: Array<{ category: string; value: number }>
   isLoading: boolean
+  labelAngle?: number
+  textAnchor?: 'start' | 'end' | 'middle'
 }) => {
   return (
     <Card className="h-full w-full flex-1 gap-4 rounded-lg shadow-none">
@@ -40,7 +44,7 @@ const TargetChart = ({
                 top: 24,
                 right: 4,
                 left: 8,
-                bottom: 4,
+                bottom: 32,
               }}
             >
               <CartesianGrid vertical={false} stroke="#e6e6e6" />
@@ -48,10 +52,12 @@ const TargetChart = ({
                 dataKey="category"
                 type="category"
                 tickLine={false}
-                tickMargin={12}
+                tickMargin={0}
                 axisLine={false}
                 interval={0}
                 height={40}
+                angle={labelAngle || -45}
+                textAnchor={textAnchor || 'end'}
               />
               <YAxis
                 dataKey="value"
