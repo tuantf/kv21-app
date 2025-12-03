@@ -10,6 +10,8 @@ import {
   Info,
   BotMessageSquare,
   Target,
+  Book,
+  BookOpen,
 } from 'lucide-react'
 
 const routes = {
@@ -100,6 +102,12 @@ const routes = {
       slug: 'gioi-thieu',
       href: '/gioi-thieu',
       icon: Info,
+    },
+    {
+      title: 'Hướng dẫn sử dụng',
+      slug: 'huong-dan-su-dung',
+      href: '/huong-dan-su-dung',
+      icon: BookOpen,
     },
   ],
 }
