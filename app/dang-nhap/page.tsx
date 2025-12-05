@@ -9,27 +9,31 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
+import { REGEXP_ONLY_DIGITS } from 'input-otp'
+import { Card, CardContent } from '@/components/ui/card'
+import { NavCustomLogo } from '@/components/sidebar/nav-logo'
 
 export default function LoginPage() {
   const [sentEmail, setSentEmail] = useState('')
   return (
     <div className="relative">
       <Beams className="absolute inset-0" />
-      <div className="bg-background relative z-10 flex min-h-svh flex-col items-center justify-center gap-6 p-2 md:bg-transparent md:p-8">
-        <motion.div
-          initial={initial}
-          animate={animate}
-          transition={transition}
-          className="w-full max-w-sm"
-        >
-          <div className="flex flex-1 items-center justify-center">
-            <div>
-              {!sentEmail ? (
-                <EmailStep onSendEmail={setSentEmail} />
-              ) : (
-                <CodeStep sentEmail={sentEmail} />
-              )}
-            </div>
+      <div className="relative z-10 flex min-h-svh flex-col items-center justify-center gap-6 bg-transparent p-4 md:bg-transparent md:p-8">
+        <motion.div initial={initial} animate={animate} transition={transition}>
+          <div className="bg-card/50 mb-6 flex w-full max-w-sm flex-col items-center justify-center gap-6 backdrop-blur-sm">
+            <Card className="items-center justify-center bg-transparent shadow-none">
+              <div className="scale-110">
+                <NavCustomLogo text="CÔNG TY NƯỚC" />
+              </div>
+              <CardContent>
+                {!sentEmail ? (
+                  <EmailStep onSendEmail={setSentEmail} />
+                ) : (
+                  <CodeStep sentEmail={sentEmail} />
+                )}
+              </CardContent>
+            </Card>
           </div>
         </motion.div>
       </div>
@@ -85,10 +89,10 @@ function EmailStep({ onSendEmail }: { onSendEmail: (email: string) => void }) {
     <form
       key="email"
       onSubmit={isEmailExisted ? handleSubmit : handleEmailNotExisted}
-      className="flex flex-col items-center space-y-6"
+      className="flex flex-col items-center gap-6"
     >
-      <h2 className="text-xl font-bold">Đăng nhập</h2>
-      <p className="text-center text-gray-700 italic">
+      <p className="text-lg font-semibold">Đăng nhập</p>
+      <p className="text-muted-foreground text-center text-sm">
         Nhập email vào ô dưới đây, và mã xác thực sẽ được gửi đến email của bạn
       </p>
       <Input
@@ -103,10 +107,10 @@ function EmailStep({ onSendEmail }: { onSendEmail: (email: string) => void }) {
         type="submit"
         className="bg-signature-blue/80 hover:bg-signature-blue/90 w-full text-white"
       >
-        Gửi mã xác thực
+        Gửi mã xác thực 🎉
       </Button>
       <div
-        className="cursor-pointer text-center text-xs text-gray-700 hover:underline"
+        className="text-muted-foreground cursor-pointer text-center text-sm hover:underline"
         onClick={() => router.push('/')}
       >
         Trở về trang chủ
@@ -149,27 +153,36 @@ function CodeStep({ sentEmail }: { sentEmail: string }) {
 
   return (
     <form key="code" onSubmit={handleSubmit} className="flex flex-col items-center space-y-6">
-      <h2 className="text-xl font-bold">Nhập mã xác thực</h2>
-      <p className="text-center text-gray-700 italic">
+      <p className="text-lg font-semibold">Nhập mã xác thực</p>
+      <p className="text-muted-foreground text-center text-sm">
         Mã xác thực đã được gửi đến email <strong>{sentEmail}</strong>. Kiểm tra email của bạn và
         nhập mã xác thực vào ô dưới đây.
       </p>
-      <Input
+      <InputOTP
         type="text"
-        className="w-full rounded-md border border-gray-300 px-3 py-1"
-        placeholder="123456"
+        pattern={REGEXP_ONLY_DIGITS}
         required
         value={code}
-        onChange={e => setCode(e.target.value)}
-      />
+        onChange={value => setCode(value)}
+        maxLength={6}
+      >
+        <InputOTPGroup>
+          <InputOTPSlot index={0} />
+          <InputOTPSlot index={1} />
+          <InputOTPSlot index={2} />
+          <InputOTPSlot index={3} />
+          <InputOTPSlot index={4} />
+          <InputOTPSlot index={5} />
+        </InputOTPGroup>
+      </InputOTP>
       <Button
         type="submit"
         className="bg-signature-blue/80 hover:bg-signature-blue/90 w-full text-white"
       >
-        Đăng nhập
+        Đăng nhập 🎉
       </Button>
       <div
-        className="cursor-pointer text-center text-xs text-gray-700 hover:underline"
+        className="text-muted-foreground cursor-pointer text-center text-sm hover:underline"
         onClick={() => router.push('/')}
       >
         Trở về trang chủ
