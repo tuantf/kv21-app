@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 
+import { CalendarTodayWork } from './calendar'
 import { NavHeader } from './nav-header'
 import { NavMain } from './nav-main'
 import { NavUserDefault } from './nav-user-default'
@@ -20,6 +21,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={routes.overview} label="Tổng quan" />
         <NavMain items={routes.ai} label="AI" />
+        <CalendarTodayWork />
       </SidebarContent>
       <SidebarFooter>
         <db.SignedIn>
