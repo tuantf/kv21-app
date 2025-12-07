@@ -3,13 +3,14 @@
 import { motion } from 'motion/react'
 import { initial, animate, transition } from '@/libs/motion'
 import { Beams } from '@/components/background/beam'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { db } from '@/libs/instantdb'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { setAuthTokenCookie } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { Card, CardContent } from '@/components/ui/card'
 import { NavCustomLogo } from '@/components/sidebar/nav-logo'
@@ -41,56 +42,87 @@ export default function LoginPage() {
   )
 }
 
-const EMAIL_STEP_COOLDOWN = Number(process.env.NEXT_PUBLIC_EMAIL_STEP_COOLDOWN || 10000) // Default 10 seconds
-const CODE_STEP_COOLDOWN = Number(process.env.NEXT_PUBLIC_CODE_STEP_COOLDOWN || 10000) // Default 10 seconds
+const EMAIL_STEP_COOLDOWN = 10000
+const CODE_STEP_COOLDOWN = 10000
+const EMAIL_QUERY_DEBOUNCE = 500 // Debounce email query by 500ms
 
 function EmailStep({ onSendEmail }: { onSendEmail: (email: string) => void }) {
   const [email, setEmail] = useState('')
+  const [debouncedEmail, setDebouncedEmail] = useState('')
   const lastSendTimeRef = useRef<number | null>(null)
   const router = useRouter()
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
 
-    const now = Date.now()
-    // Check rate limit
+  // Debounce email query to prevent too many database queries
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedEmail(email)
+    }, EMAIL_QUERY_DEBOUNCE)
+
+    return () => clearTimeout(timer)
+  }, [email])
+
+  // Only query database with debounced email
+  const { data } = db.useQuery(
+    debouncedEmail ? { $users: { $: { where: { email: debouncedEmail } } } } : null,
+  )
+  const isEmailExisted = useMemo(
+    () => data?.$users?.length && data.$users.length > 0,
+    [data?.$users?.length],
+  )
+
+  // Unified rate limit check function
+  const checkRateLimit = (): boolean => {
     if (lastSendTimeRef.current !== null) {
+      const now = Date.now()
       const timeSinceLastSend = now - lastSendTimeRef.current
       if (timeSinceLastSend < EMAIL_STEP_COOLDOWN) {
         const remainingSeconds = Math.ceil((EMAIL_STEP_COOLDOWN - timeSinceLastSend) / 1000)
         toast.warning(`Vui lòng đợi ${remainingSeconds} giây trước khi thử lại`)
-        return
+        return false
       }
+    }
+    return true
+  }
+
+  // Set rate limit on error
+  const setRateLimit = () => {
+    lastSendTimeRef.current = Date.now()
+  }
+
+  // Clear rate limit on success
+  const clearRateLimit = () => {
+    lastSendTimeRef.current = null
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (!checkRateLimit()) return
+
+    // Check if email exists before sending magic code
+    if (!isEmailExisted) {
+      setRateLimit()
+      toast.error(
+        `Người dùng với email ${email} không tồn tại, vui lòng liên hệ người quản lý phần mềm để được hỗ trợ`,
+      )
+      return
     }
 
     onSendEmail(email)
     db.auth
       .sendMagicCode({ email })
       .then(() => {
-        // Update last send time on success
-        lastSendTimeRef.current = Date.now()
+        clearRateLimit()
       })
       .catch(err => {
+        setRateLimit()
         toast.error('Có lỗi xảy ra: ' + err.body?.message)
         onSendEmail('')
       })
   }
 
-  const handleEmailNotExisted = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    toast.error(
-      `Người dùng với email ${email} không tồn tại, vui lòng liên hệ người quản lý phần mềm để được hỗ trợ`,
-    )
-  }
-
-  const { data } = db.useQuery(email ? { $users: { $: { where: { email: email } } } } : null)
-  const isEmailExisted = data?.$users?.length && data.$users.length > 0
-
   return (
-    <form
-      key="email"
-      onSubmit={isEmailExisted ? handleSubmit : handleEmailNotExisted}
-      className="flex flex-col items-center gap-6"
-    >
+    <form key="email" onSubmit={handleSubmit} className="flex flex-col items-center gap-6">
       <p className="text-lg font-semibold">Đăng nhập</p>
       <p className="text-muted-foreground text-center text-sm">
         Nhập email vào ô dưới đây, và mã xác thực sẽ được gửi đến email của bạn
@@ -127,9 +159,9 @@ function CodeStep({ sentEmail }: { sentEmail: string }) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const now = Date.now()
-    // Check rate limit
+    // Check rate limit only if there was a previous error
     if (lastSubmitTimeRef.current !== null) {
+      const now = Date.now()
       const timeSinceLastSubmit = now - lastSubmitTimeRef.current
       if (timeSinceLastSubmit < CODE_STEP_COOLDOWN) {
         const remainingSeconds = Math.ceil((CODE_STEP_COOLDOWN - timeSinceLastSubmit) / 1000)
@@ -140,14 +172,17 @@ function CodeStep({ sentEmail }: { sentEmail: string }) {
 
     db.auth
       .signInWithMagicCode({ email: sentEmail, code })
-      .then(() => {
-        // Update last submit time on success
-        lastSubmitTimeRef.current = Date.now()
+      .then(async result => {
+        // Clear rate limit on success
+        lastSubmitTimeRef.current = null
+        await setAuthTokenCookie(result.user.refresh_token)
         router.push('/')
       })
       .catch(err => {
+        // Set rate limit on error to prevent rapid retries
+        lastSubmitTimeRef.current = Date.now()
         setCode('')
-        toast.error('Có lỗi xảy ra: ' + err.body?.message)
+        toast.error('Mã xác thực không đúng, vui lòng thử lại')
       })
   }
 
@@ -167,19 +202,19 @@ function CodeStep({ sentEmail }: { sentEmail: string }) {
         maxLength={6}
       >
         <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSlot index={1} />
-          <InputOTPSlot index={2} />
-          <InputOTPSlot index={3} />
-          <InputOTPSlot index={4} />
-          <InputOTPSlot index={5} />
+          <InputOTPSlot index={0} className="text-lg font-medium" />
+          <InputOTPSlot index={1} className="text-lg font-medium" />
+          <InputOTPSlot index={2} className="text-lg font-medium" />
+          <InputOTPSlot index={3} className="text-lg font-medium" />
+          <InputOTPSlot index={4} className="text-lg font-medium" />
+          <InputOTPSlot index={5} className="text-lg font-medium" />
         </InputOTPGroup>
       </InputOTP>
       <Button
         type="submit"
         className="bg-signature-blue/80 hover:bg-signature-blue/90 w-full text-white"
       >
-        Đăng nhập 🎉
+        Đăng nhập
       </Button>
       <div
         className="text-muted-foreground cursor-pointer text-center text-sm hover:underline"

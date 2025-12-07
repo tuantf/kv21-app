@@ -2,6 +2,7 @@
 
 import { syncAll } from '@/libs/sync'
 import { init } from '@instantdb/admin'
+import { cookies } from 'next/headers'
 
 function getRequiredEnv(name: string): string {
   const v = process.env[name]
@@ -9,14 +10,46 @@ function getRequiredEnv(name: string): string {
   return v
 }
 
-// InstantDB SDK initialization (server)
 const db = init({
   appId: getRequiredEnv('INSTANTDB_APP_ID'),
   adminToken: getRequiredEnv('INSTANTDB_ADMIN_TOKEN'),
 })
 
-export async function Sync() {
+async function verifyAdmin() {
+  const token = (await cookies()).get('token')?.value
+  if (!token) return null
+  return await db.auth.verifyToken(token)
+}
+
+export async function setAuthTokenCookie(token: string) {
+  const cookieStore = await cookies()
+  cookieStore.set('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  })
+}
+
+export async function cleanCookies() {
+  const cookieStore = await cookies()
+  cookieStore.delete('token')
+  cookieStore.delete('idb-token')
+  cookieStore.delete('instantdb-token')
+}
+
+export async function syncData() {
   try {
+    const user = await verifyAdmin()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Not authenticated',
+        error: 'UNAUTHORIZED',
+      }
+    }
+
     const result = await syncAll()
     return {
       success: result.success,
@@ -30,6 +63,15 @@ export async function Sync() {
 
 export async function updateBaoCaoNgaySettings(iframeUrl: string) {
   try {
+    const user = await verifyAdmin()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Not authenticated',
+        error: 'UNAUTHORIZED',
+      }
+    }
+
     if (!iframeUrl || typeof iframeUrl !== 'string') {
       return { success: false, message: 'URL không được để trống' }
     }
@@ -83,6 +125,15 @@ export async function updateHoiDapLinks(
   baoCaoUrl: string,
 ) {
   try {
+    const user = await verifyAdmin()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Not authenticated',
+        error: 'UNAUTHORIZED',
+      }
+    }
+
     if (!tcqcUrl || !quytrinhUrl || !tuyenTruyenUrl || !baoCaoUrl) {
       return { success: false, message: 'URL không được để trống' }
     }
@@ -148,6 +199,15 @@ type LessonData = {
 
 export async function createLesson(collection: LessonCollection, lessonData: LessonData) {
   try {
+    const user = await verifyAdmin()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Not authenticated',
+        error: 'UNAUTHORIZED',
+      }
+    }
+
     if (!lessonData.title || !lessonData.videoUrl) {
       return { success: false, message: 'Tiêu đề và URL video không được để trống' }
     }
@@ -176,6 +236,15 @@ export async function updateLesson(
   lessonData: LessonData,
 ) {
   try {
+    const user = await verifyAdmin()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Not authenticated',
+        error: 'UNAUTHORIZED',
+      }
+    }
+
     if (!lessonData.title || !lessonData.videoUrl) {
       return { success: false, message: 'Tiêu đề và URL video không được để trống' }
     }
@@ -198,6 +267,15 @@ export async function updateLesson(
 
 export async function deleteLesson(collection: LessonCollection, lessonId: string) {
   try {
+    const user = await verifyAdmin()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Not authenticated',
+        error: 'UNAUTHORIZED',
+      }
+    }
+
     await db.transact(db.tx[collection][lessonId].delete())
 
     return { success: true, message: 'Xóa bài học thành công' }
@@ -213,6 +291,15 @@ export async function reorderLessons(
   direction: 'up' | 'down',
 ) {
   try {
+    const user = await verifyAdmin()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Uh oh, you are not authenticated',
+        error: 'UNAUTHORIZED',
+      }
+    }
+
     // Query all lessons
     const query = { [collection]: {} }
     const result = await db.query(query)
@@ -261,6 +348,16 @@ export async function bulkReorderLessons(
   reorderedLessons: Array<{ id: string; order: number }>,
 ) {
   try {
+    // Verify the user token
+    const user = await verifyAdmin()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Not authenticated',
+        error: 'UNAUTHORIZED',
+      }
+    }
+
     const now = Date.now()
     const updates = reorderedLessons.map(lesson =>
       db.tx[collection][lesson.id].update({
