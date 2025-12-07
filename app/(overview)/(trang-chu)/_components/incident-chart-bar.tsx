@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { XAxis, YAxis, CartesianGrid, Bar, ComposedChart, Line } from 'recharts'
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { TrendingUp, TrendingDown, X } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -28,6 +28,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { maxChartDataValue as maxValue } from '@/libs/max-chart-data-value'
 import { extractYear, filterAndTransformByYear, calculateTotal } from '@/libs/transform-data'
+import { Trending } from './trending'
 
 const chartConfig = {} satisfies ChartConfig
 
@@ -217,11 +218,11 @@ const IncidentChartBar = ({
                 </span>
                 vụ cháy{' '}
                 {diffChay > 0 ? (
-                  <TrendingUp className="text-signature-orange/80 size-3 translate-y-0.25" />
+                  <Trending type="up" />
                 ) : diffChay < 0 ? (
-                  <TrendingDown className="text-signature-blue/80 size-3 translate-y-0.25" />
+                  <Trending type="down" />
                 ) : null}
-                <span>{' và '}</span>
+                <span>{'và '}</span>
                 <span
                   className={`${diffVuViec > 0 ? 'text-signature-orange/80' : diffVuViec < 0 ? 'text-signature-blue/80' : ''} font-semibold whitespace-pre`}
                 >
@@ -230,12 +231,10 @@ const IncidentChartBar = ({
                 </span>
                 vụ việc{' '}
                 {diffVuViec > 0 ? (
-                  <TrendingUp className="text-signature-orange/80 size-3 translate-y-0.25" />
+                  <Trending type="up" />
                 ) : diffVuViec < 0 ? (
-                  <TrendingDown className="text-signature-blue/80 size-3 translate-y-0.25" />
-                ) : (
-                  <Minus className="text-muted-foreground size-3 translate-y-0.25" />
-                )}{' '}
+                  <Trending type="down" />
+                ) : null}
               </>
             )}
           </CardDescription>

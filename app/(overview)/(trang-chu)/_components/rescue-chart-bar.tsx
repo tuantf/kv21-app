@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { XAxis, YAxis, CartesianGrid, Bar, ComposedChart, Line } from 'recharts'
-import { TrendingUp, TrendingDown } from 'lucide-react'
+import { TrendingUp, TrendingDown, X } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -28,6 +28,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { maxChartDataValue as maxValue } from '@/libs/max-chart-data-value'
 import { extractYear, filterAndTransformByYear, calculateTotal } from '@/libs/transform-data'
+import { Trending } from './trending'
 
 const chartConfig = {} satisfies ChartConfig
 
@@ -210,29 +211,25 @@ const RescueChartBar = ({
             ) : (
               <>
                 <span
-                  className={`${diffNo > 0 ? 'text-[#ff4800]/80' : diffNo < 0 ? 'text-[#1e88e5]/80' : ''} font-semibold whitespace-pre`}
+                  className={`${diffNo > 0 ? 'text-signature-orange/80' : diffNo < 0 ? 'text-signature-blue/80' : ''} font-semibold whitespace-pre`}
                 >
                   {diffNo > 0 ? 'tăng' : diffNo < 0 ? 'giảm' : 'tăng/giảm'} {Math.abs(diffNo)}{' '}
                 </span>
                 vụ nổ{' '}
-                {diffNo > 0 ? (
-                  <TrendingUp className="size-3 translate-y-0.25 text-[#ff4800]/80" />
-                ) : diffNo < 0 ? (
-                  <TrendingDown className="size-3 translate-y-0.25 text-[#1e88e5]/80" />
-                ) : null}
-                <span>{' và '}</span>
+                {diffNo > 0 ? <Trending type="up" /> : diffNo < 0 ? <Trending type="down" /> : null}
+                <span>{'và '}</span>
                 <span
-                  className={`${diffCNCH > 0 ? 'text-[#ff4800]/80' : diffCNCH < 0 ? 'text-[#1e88e5]/80' : ''} font-semibold whitespace-pre`}
+                  className={`${diffCNCH > 0 ? 'text-signature-orange/80' : diffCNCH < 0 ? 'text-signature-blue/80' : ''} font-semibold whitespace-pre`}
                 >
                   {diffCNCH > 0 ? 'tăng' : diffCNCH < 0 ? 'giảm' : 'tăng/giảm'}{' '}
                   {Math.abs(diffCNCH)}{' '}
                 </span>
                 vụ CNCH{' '}
                 {diffCNCH > 0 ? (
-                  <TrendingUp className="size-3 translate-y-0.25 text-[#ff4800]/80" />
+                  <Trending type="up" />
                 ) : diffCNCH < 0 ? (
-                  <TrendingDown className="size-3 translate-y-0.25 text-[#1e88e5]/80" />
-                ) : null}{' '}
+                  <Trending type="down" />
+                ) : null}
               </>
             )}
           </CardDescription>
