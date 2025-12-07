@@ -411,19 +411,19 @@ export function LessonEditorDialog({
             </div>
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-4 md:gap-2">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={saving}
-            className="hover:bg-sidebar h-8 w-20 shadow-none"
+            className="hover:bg-sidebar h-8 w-full shadow-none md:w-20"
           >
             Hủy
           </Button>
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-signature-blue/80 hover:bg-signature-blue/90 h-8 w-20 text-white shadow-none transition-colors hover:text-white"
+            className="bg-signature-blue/80 hover:bg-signature-blue/90 h-8 w-full text-white shadow-none transition-colors hover:text-white md:w-20"
           >
             {saving ? <Spinner /> : 'Lưu'}
           </Button>
