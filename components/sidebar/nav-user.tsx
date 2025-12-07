@@ -20,6 +20,7 @@ import {
 import { db } from '@/libs/instantdb'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { cleanCookies } from '@/app/actions'
 
 export function NavUser() {
   const { isMobile } = useSidebar()
@@ -104,7 +105,8 @@ export function NavUser() {
                 className="hover:bg-ring/20"
                 onClick={() => {
                   db.auth.signOut()
-                  toast.success('Đã đăng xuất')
+                  cleanCookies()
+                  toast.success('Tạm biệt')
                 }}
               >
                 <LogOut />
