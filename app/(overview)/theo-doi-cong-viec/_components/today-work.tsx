@@ -11,6 +11,13 @@ const weekdayFormatter = new Intl.DateTimeFormat('vi-VN', {
 
 const columns: ExtendedColumnDef<Record<string, string>, unknown>[] = [
   {
+    accessorKey: '',
+    header: ' ',
+    size: 5,
+    align: 'center',
+    highlight: false,
+  },
+  {
     accessorKey: 'Nội dung công việc',
     header: 'Nội dung công việc',
     size: 400,
