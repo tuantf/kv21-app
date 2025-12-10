@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { ChevronRight, type LucideIcon } from 'lucide-react'
+import Link from 'next/link'
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import {
@@ -55,8 +56,10 @@ export function NavMain({
             <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip={item.title}>
-                  <a
+                  <Link
                     href={item.href}
+                    target={item.href.includes('trainghiem') ? '_blank' : undefined}
+                    prefetch={false}
                     className={`gap-3 hover:bg-white/80 hover:[&>div]:text-(--signature-blue)/80 ${
                       isActive ? 'bg-white/80 [&>div]:text-(--signature-blue)/80' : ''
                     }`}
@@ -65,7 +68,7 @@ export function NavMain({
                       {item.icon && <item.icon />}
                     </div>
                     <span>{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
                 {item.items?.length ? (
                   <>
@@ -82,15 +85,19 @@ export function NavMain({
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
                               <SidebarMenuSubButton asChild>
-                                <a
+                                <Link
                                   href={subItem.href}
+                                  target={
+                                    subItem.href.includes('trainghiem') ? '_blank' : undefined
+                                  }
+                                  prefetch={false}
                                   className={cn(
                                     'hover:bg-sidebar-hover',
                                     isSubActive ? 'bg-sidebar-hover' : '',
                                   )}
                                 >
                                   <span>{subItem.title}</span>
-                                </a>
+                                </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           )
