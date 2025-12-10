@@ -63,12 +63,10 @@ const routes = {
       icon: UserStar,
       isActive: false,
     },
-  ],
-  other: [
     {
       title: 'Trải nghiệm PCCC',
       slug: 'trai-nghiem-pccc',
-      href: '/trai-nghiem-pccc',
+      href: 'https://trainghiem.kv21.io.vn/',
       icon: FireExtinguisher,
       isActive: false,
     },
@@ -98,15 +96,9 @@ const routes = {
   ],
   helper: [
     {
-      title: 'Giới thiệu',
-      slug: 'gioi-thieu',
-      href: '/gioi-thieu',
-      icon: Info,
-    },
-    {
       title: 'Hướng dẫn sử dụng',
       slug: 'huong-dan-su-dung',
-      href: '/huong-dan-su-dung',
+      href: 'https://docs.google.com/document/d/1zbXoXNIEK2-dcy0PhI-AxusqqEC0ENAwglLzgoSZs-0/edit?usp=sharing',
       icon: BookOpen,
     },
   ],
