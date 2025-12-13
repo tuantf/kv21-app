@@ -103,7 +103,9 @@ export default function Page() {
             <Spinner className="text-signature-blue/80 size-5" />
           </div>
         ) : iframeUrl ? (
-          <iframe className="h-full w-full border-none" src={iframeUrl} />
+          <div className="h-full w-full border-none dark:brightness-100 dark:hue-rotate-180 dark:invert dark:saturate-100">
+            <iframe className="h-full w-full border-none" src={iframeUrl} />
+          </div>
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8">
             <Image
