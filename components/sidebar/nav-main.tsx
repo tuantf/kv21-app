@@ -60,8 +60,8 @@ export function NavMain({
                     href={item.href}
                     target={item.href.includes('trainghiem') ? '_blank' : undefined}
                     prefetch={false}
-                    className={`gap-3 hover:bg-white/80 hover:[&>div]:text-(--signature-blue)/80 ${
-                      isActive ? 'bg-white/80 [&>div]:text-(--signature-blue)/80' : ''
+                    className={`hover:bg-sidebar-accent gap-3 hover:[&>div]:text-(--signature-blue)/80 ${
+                      isActive ? 'bg-sidebar-accent [&>div]:text-(--signature-blue)/80' : ''
                     }`}
                   >
                     <div className="text-foreground flex size-4 items-center justify-center transition-colors">
