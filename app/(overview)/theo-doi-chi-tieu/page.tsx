@@ -11,6 +11,11 @@ import { syncData } from '@/app/actions'
 import { RotateCw } from 'lucide-react'
 import { TargetChart } from './_components/target-chart'
 import { parseValue } from '@/libs/parse-value'
+import { cn } from '@/libs/utils'
+import { getProgressColorClass } from '@/libs/get-progress-color'
+import { Card, CardTitle } from '@/components/ui/card'
+import Image from 'next/image'
+import Link from 'next/link'
 
 const query = {
   sheets: {
@@ -20,13 +25,49 @@ const query = {
       },
     },
   },
+  links: {
+    $: {
+      where: {
+        name: 'theodoichitieu',
+      },
+    },
+  },
 }
 
-const SYNC_COOLDOWN = Number(process.env.NEXT_PUBLIC_SYNC_COOLDOWN || 30000)
+const SYNC_COOLDOWN = Number(process.env.NEXT_PUBLIC_SYNC_COOLDOWN || 60000)
+
+const calculateYearProgress = (now: Date, currentYearStart: Date, currentYearEnd: Date): number => {
+  const totalDays = (currentYearEnd.getTime() - currentYearStart.getTime()) / (1000 * 60 * 60 * 24)
+  const daysPassed = (now.getTime() - currentYearStart.getTime()) / (1000 * 60 * 60 * 24)
+  return Math.round((daysPassed / totalDays) * 100)
+}
 
 export default function Page() {
   const [isSyncing, setIsSyncing] = useState(false)
   const lastSyncTimeRef = useRef<number | null>(null)
+
+  // Calculate all date-related values once per mount to prevent hydration errors
+  const dateValues = useMemo(() => {
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const newYearStart = new Date(currentYear, 11, 15)
+    const newYearEnd = new Date(currentYear + 1, 11, 14)
+    const currentYearStart = now < newYearStart ? new Date(currentYear - 1, 11, 15) : newYearStart
+    const currentYearEnd = new Date(currentYearStart.getFullYear() + 1, 11, 14)
+    const displayYear = now >= newYearStart && now <= newYearEnd ? currentYear + 1 : currentYear
+    const yearProgress = calculateYearProgress(now, currentYearStart, currentYearEnd)
+
+    return {
+      now,
+      currentYear,
+      newYearStart,
+      newYearEnd,
+      currentYearStart,
+      currentYearEnd,
+      displayYear,
+      yearProgress,
+    }
+  }, [])
 
   const { data, isLoading, error } = db.useQuery(query)
 
@@ -93,7 +134,7 @@ export default function Page() {
       string,
       {
         groupLabel: string
-        categories: Array<{ category: string; value: number }>
+        categories: Array<{ category: string; value: number; note?: string }>
       }
     > = {}
 
@@ -102,6 +143,7 @@ export default function Page() {
       const groupLabel = row['Nhóm Label'] || group
       const category = row['Danh mục']
       const value = row['Hoàn thành']
+      const note = row['Ghi chú']
 
       // Filter out rows with missing essential data
       if (!group || !category || value == null) return
@@ -116,6 +158,7 @@ export default function Page() {
       groups[groupKey].categories.push({
         category: String(category),
         value: parseValue(value),
+        note: String(note),
       })
     })
 
@@ -131,6 +174,32 @@ export default function Page() {
     <>
       <Header title="Theo dõi chi tiêu" extraButtons={SyncButton} />
       <main className="flex flex-1 flex-col gap-4 overflow-auto p-4 pt-0 md:overflow-hidden">
+        <motion.section initial={initial} animate={animate} transition={transition}>
+          <Card className="flex h-12 justify-center gap-2 rounded-lg px-6 py-0 shadow-none">
+            <CardTitle className="flex items-center justify-between gap-1">
+              <div className="flex items-center gap-1">
+                <span>Năm {dateValues.displayYear} đã qua</span>
+                <span
+                  className={cn(
+                    'font-semibold',
+                    getProgressColorClass(Number(dateValues.yearProgress), 'forward'),
+                  )}
+                >
+                  {dateValues.yearProgress}%
+                </span>
+              </div>
+              <Link href={data?.links[0]?.url || ''} prefetch={false} target="_blank">
+                <Image
+                  src="/logo/sheets.svg"
+                  alt="Google Sheets"
+                  width={16}
+                  height={16}
+                  className="size-5"
+                />
+              </Link>
+            </CardTitle>
+          </Card>
+        </motion.section>
         <motion.section
           initial={initial}
           animate={animate}
