@@ -44,13 +44,9 @@ const Ask = ({
       <div className="bg-card flex h-full flex-1 flex-col gap-4 rounded-lg border md:flex-row">
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="flex items-center gap-4">
-            <Image
-              src="/logo/notebooklm.svg"
-              alt="NotebookLM Logo"
-              width={40}
-              height={40}
-              className="size-10"
-            />
+            <div className="dark:invert">
+              <Image src="/logo/notebooklm.svg" alt="NotebookLM Logo" width={40} height={40} />
+            </div>
             <div className="items-start">
               <div className="text-lg font-semibold tracking-tight">{title}</div>
               <div className="text-muted-foreground text-sm font-medium">{description}</div>
