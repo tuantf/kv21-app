@@ -22,7 +22,7 @@ import { Header } from '@/components/header'
 import { updateBaoCaoNgaySettings } from '@/app/actions'
 import { db } from '@/libs/instantdb'
 
-const query = { baocaongay: {} }
+const query = { baocaongay: {}, links: { $: { where: { name: 'baocaongay' } } } }
 
 export default function Page() {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -128,10 +128,10 @@ export default function Page() {
                 để thêm Google Form
               </p>
               <p className="text-muted-foreground mt-2 text-sm">
-                <Link href="https://forms.gle/8Q4uXqdHRiGpFHfR7" target="_blank">
+                <Link href={data?.links[0]?.url || ''} target="_blank">
                   Hoặc ấn vào đây để báo cáo trực tiếp{' '}
                   <span className="hover:text-signature-blue/80 cursor-pointer font-medium underline">
-                    https://forms.gle/8Q4uXqdHRiGpFHfR7
+                    {data?.links[0]?.url}
                   </span>
                 </Link>
               </p>
