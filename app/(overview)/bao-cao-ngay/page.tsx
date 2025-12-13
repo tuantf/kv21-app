@@ -3,6 +3,7 @@
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { Settings } from 'lucide-react'
+import Link from 'next/link'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import {
@@ -113,18 +114,26 @@ export default function Page() {
               height={48}
             />
             <div className="text-center">
-              <h3 className="text-lg font-semibold">Chưa có Google Form</h3>
+              <h3 className="text-lg font-semibold">Chưa cài đặt Google Form</h3>
               <p className="text-muted-foreground mt-2 text-sm">
-                Hãy nhấn vào biểu tượng cài đặt ở trên để thêm Google Form
+                Hãy nhấn{' '}
+                <span
+                  onClick={handleOpenDialog}
+                  className="hover:text-signature-blue/80 cursor-pointer font-semibold underline"
+                >
+                  vào đây
+                </span>{' '}
+                để thêm Google Form
+              </p>
+              <p className="text-muted-foreground mt-2 text-sm">
+                <Link href="https://forms.gle/8Q4uXqdHRiGpFHfR7" target="_blank">
+                  Hoặc ấn vào đây để báo cáo trực tiếp{' '}
+                  <span className="hover:text-signature-blue/80 cursor-pointer font-medium underline">
+                    https://forms.gle/8Q4uXqdHRiGpFHfR7
+                  </span>
+                </Link>
               </p>
             </div>
-            <Button
-              onClick={handleOpenDialog}
-              variant="outline"
-              className="border-signature-blue/80 hover:bg-signature-blue/80 bg-transparent shadow-none transition-colors hover:text-white"
-            >
-              Thêm Google Form
-            </Button>
           </div>
         )}
       </div>
