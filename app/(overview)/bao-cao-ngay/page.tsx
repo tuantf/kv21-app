@@ -49,11 +49,6 @@ export default function Page() {
   }
 
   const handleOpenDialog = () => {
-    // TODO: Add permission check here when authentication is implemented
-    // Example: if (!user || !user.isAdmin) {
-    //   toast.error('Bạn không có quyền chỉnh sửa')
-    //   return
-    // }
     setUrlInput(iframeUrl || '')
     setUrlError('')
     setDialogOpen(true)
