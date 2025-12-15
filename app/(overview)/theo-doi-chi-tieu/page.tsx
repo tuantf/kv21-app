@@ -13,7 +13,7 @@ import { TargetChart } from './_components/target-chart'
 import { parseValue } from '@/libs/parse-value'
 import { cn } from '@/libs/utils'
 import { getProgressColorClass } from '@/libs/get-progress-color'
-import { Card, CardTitle } from '@/components/ui/card'
+import { Card, CardTitle, CardDescription } from '@/components/ui/card'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -175,18 +175,26 @@ export default function Page() {
       <Header title="Theo dõi chi tiêu" extraButtons={SyncButton} />
       <main className="flex flex-1 flex-col gap-4 overflow-auto p-4 pt-0 md:overflow-hidden">
         <motion.section initial={initial} animate={animate} transition={transition}>
-          <Card className="flex h-12 justify-center gap-2 rounded-lg px-6 py-0 shadow-none">
-            <CardTitle className="flex items-center justify-between gap-1">
-              <div className="flex items-center gap-1">
-                <span>Năm {dateValues.displayYear} đã qua</span>
-                <span
-                  className={cn(
-                    'font-semibold',
-                    getProgressColorClass(Number(dateValues.yearProgress), 'forward'),
-                  )}
-                >
-                  {dateValues.yearProgress}%
-                </span>
+          <Card className="flex h-16 items-center justify-between gap-2 rounded-lg px-6 py-0 shadow-none">
+            <div className="flex h-full w-full flex-1 items-center justify-between">
+              <div className="flex flex-col items-start gap-1.5">
+                <CardTitle className="flex items-center gap-1">
+                  <span>Năm {dateValues.displayYear} đã qua</span>
+                  <span
+                    className={cn(
+                      'font-semibold',
+                      getProgressColorClass(Number(dateValues.yearProgress), 'forward'),
+                    )}
+                  >
+                    {dateValues.yearProgress}%
+                  </span>
+                </CardTitle>
+                <CardDescription>
+                  Chỉ tiêu tính đến ngày{' '}
+                  <span className="font-semibold">
+                    {dateValues.now.toLocaleDateString('vi-VN')}
+                  </span>
+                </CardDescription>
               </div>
               <Link href={data?.links[0]?.url || ''} prefetch={false} target="_blank">
                 <Image
@@ -197,7 +205,7 @@ export default function Page() {
                   className="size-5"
                 />
               </Link>
-            </CardTitle>
+            </div>
           </Card>
         </motion.section>
         <motion.section
