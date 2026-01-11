@@ -27,9 +27,11 @@ export function NavUser() {
   const { isMobile } = useSidebar()
   const router = useRouter()
   const { user } = db.useAuth()
-  const { data } = db.useQuery({ $users: { $: { where: { email: user?.email } } } })
+  const { data } = db.useQuery({
+    $users: { $: { where: { email: user?.email } }, $files: { $: {} } },
+  })
   const userName = data?.$users?.[0]?.name
-  const userAvatar = data?.$users?.[0]?.imageURL
+  const userAvatar = data?.$users?.[0]?.$files?.[0]?.url
   return (
     <SidebarMenu>
       <SidebarMenuItem>
