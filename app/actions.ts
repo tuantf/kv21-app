@@ -52,12 +52,30 @@ export async function syncData() {
     }
 
     const result = await syncAll()
+
+    // Consider sync successful if at least one component succeeded
+    const sheetsSucceeded = result.sheets?.success ?? false
+    const chuyendeSucceeded = result.chuyende?.success ?? false
+    const anySucceeded = sheetsSucceeded || chuyendeSucceeded
+
+    // Build detailed message
+    let message = 'Đồng bộ thành công'
+    if (!result.success && anySucceeded) {
+      // Partial success
+      const failedComponents = []
+      if (!sheetsSucceeded) failedComponents.push('sheets')
+      if (!chuyendeSucceeded) failedComponents.push('chuyên đề')
+      message = `Đồng bộ thành công (Kiểm tra lại: ${failedComponents.join(', ')})`
+    } else if (!anySucceeded) {
+      message = 'Đồng bộ thất bại'
+    }
+
     return {
-      success: result.success,
-      message: result.success ? 'Đồng bộ thành công' : 'Đồng bộ thất bại',
+      success: anySucceeded,
+      message,
     }
   } catch (error: any) {
-    console.error('Sync failed:', error)
+    console.error('Sync failed with exception:', error)
     return { success: false, message: error.message || 'Đồng bộ thất bại' }
   }
 }
@@ -223,7 +241,7 @@ export async function createLesson(collection: LessonCollection, lessonData: Les
 
     const cleanTitle = sanitizeInput(lessonData.title)
     const cleanVideoUrl = sanitizeUrl(lessonData.videoUrl)
-    
+
     // Note: We're not deeply sanitizing sections content here to avoid breaking HTML content.
     // Ideally rich text content should be sanitized with a robust HTML sanitizer on input or render.
 
