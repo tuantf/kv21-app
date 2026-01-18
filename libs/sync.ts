@@ -391,7 +391,7 @@ export async function syncChuyenDeProgress() {
       chuyende: {
         $: {
           where: {
-            progresssource: { $isNull: false },
+            and: [{ progresssource: { $isNull: false } }, { progresssource: { $ne: '' } }],
           },
         },
       },
@@ -438,7 +438,11 @@ export async function syncChuyenDeProgress() {
     })
 
     // Calculate summary statistics
-    const succeeded = recordResults.filter(r => r.success)
+    // Records with success=true AND progress=null are SKIPPED (no data to sync)
+    // Records with success=true AND progress!=null are SUCCEEDED (synced progress)
+    // Records with success=false are FAILED (error during sync)
+    const succeeded = recordResults.filter(r => r.success && r.progress !== null)
+    const skipped = recordResults.filter(r => r.success && r.progress === null)
     const failed = recordResults.filter(r => !r.success)
 
     const criticalFailures = failed.filter(r => {
@@ -456,8 +460,8 @@ export async function syncChuyenDeProgress() {
       summary: {
         total: recordResults.length,
         succeeded: succeeded.length,
-        failed: failed.length,
-        skipped: failed.length - criticalFailures.length,
+        failed: criticalFailures.length,
+        skipped: skipped.length + (failed.length - criticalFailures.length),
       },
     }
   } catch (err: any) {
