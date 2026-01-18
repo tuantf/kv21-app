@@ -166,7 +166,7 @@ const TargetChart = ({ data, isLoading }: { data: Record<string, any>[]; isLoadi
                   margin={{
                     top: 0,
                     right: 48,
-                    left: 4,
+                    left: 8,
                     bottom: 0,
                   }}
                   layout="vertical"

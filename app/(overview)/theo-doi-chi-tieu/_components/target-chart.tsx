@@ -29,7 +29,7 @@ const TargetChart = ({
   textAnchor?: 'start' | 'end' | 'middle'
 }) => {
   return (
-    <Card className="h-full w-full flex-1 gap-4 rounded-lg shadow-none">
+    <Card className="h-full w-full flex-1 gap-4 rounded-lg py-4 shadow-none">
       <CardHeader>
         <CardTitle>
           Chỉ tiêu{' '}
@@ -38,7 +38,7 @@ const TargetChart = ({
           </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1">
+      <CardContent className="flex-1 px-4">
         {isLoading ? (
           <Skeleton className="mx-6 h-full" />
         ) : (
@@ -50,7 +50,7 @@ const TargetChart = ({
                 top: 24,
                 right: 4,
                 left: 8,
-                bottom: 32,
+                bottom: 40,
               }}
             >
               <CartesianGrid vertical={false} stroke="var(--chart-stroke)" />
@@ -88,7 +88,7 @@ const TargetChart = ({
                 tickMargin={0}
                 axisLine={false}
                 interval={0}
-                height={40}
+                height={48}
                 angle={labelAngle || -45}
                 textAnchor={textAnchor || 'end'}
               />
